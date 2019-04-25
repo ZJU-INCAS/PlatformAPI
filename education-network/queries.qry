@@ -1,0 +1,104 @@
+/**
+ * admin审核用户充值
+ */
+query GetUserTokenRechargeN{
+    description: "admin get N userrecharge"
+    statement:
+        SELECT org.education.UserTokenRecharge
+            WHERE (confirmBank == 'N')
+                ORDER BY [tokenRechargeID ASC]
+}
+
+query GetUserTokenRechargeY{
+    description: "admin get Y userrecharge"
+    statement:
+        SELECT org.education.UserTokenRecharge
+            WHERE (confirmBank == 'Y')
+                ORDER BY [tokenRechargeID ASC]
+}
+
+
+query GetUserTokenRechargeR{
+    description: "admin get R userrecharge"
+    statement:
+        SELECT org.education.UserTokenRecharge
+            WHERE (confirmBank == 'R')
+                ORDER BY [tokenRechargeID ASC]
+}
+
+/**
+ * 用户查看充值信息
+ */
+query GetUserTokenRechargeUser {
+    description: "Select all UserTokenRecharge of a spcific user"
+    statement:
+        SELECT org.education.UserTokenRecharge
+            WHERE (_$user == user)
+                ORDER BY [tokenRechargeID ASC]
+}
+
+query GetUserTokenRechargeUserN{
+    description: "user get N userrecharge"
+    statement:
+        SELECT org.education.UserTokenRecharge
+            WHERE (confirmBank == 'N' AND _$user == user)
+                ORDER BY [tokenRechargeID ASC]
+}
+
+query GetUserTokenRechargeUserY{
+    description: "user get Y userrecharge"
+    statement:
+        SELECT org.education.UserTokenRecharge
+            WHERE (confirmBank == 'Y' AND _$user == user)
+                ORDER BY [tokenRechargeID ASC]
+}
+
+query GetUserTokenRechargeUserR{
+    description: "user get R userrecharge"
+    statement:
+        SELECT org.education.UserTokenRecharge
+            WHERE (confirmBank == 'R' AND _$user == user)
+                ORDER BY [tokenRechargeID ASC]
+}
+
+/**
+ * 用户查看购买阅读服务信息   ASC 从小到大 升序
+ */
+
+query GetUserConsumeServiceU {
+    description: "Select all BuyService of a spcific user"
+    statement:
+        SELECT org.education.UserConsumeService
+            WHERE (_$user == user)
+                ORDER BY [timestamp ASC]
+}
+
+
+/**
+ * 查看某服务购买所有权记录   ASC 从小到大 升序
+ */
+ 
+query GetCompanyBuyOnwership {
+    description: "Select all ownership transactions of a spcific service"
+    statement:
+        SELECT org.education.CompanyBuyOnwership
+            WHERE (_$serviceID == serviceID)
+                ORDER BY [timestamp ASC]
+}
+
+
+
+
+/**
+ * 用户查看转账记录 
+ */
+
+query GetUserTokenTransferU_U {
+    description: "Select all BuyService of a spcific user"
+    statement:
+        SELECT org.education.TokenTransferU_U
+            WHERE (_$fromuser == fromuser)
+                ORDER BY [timestamp ASC]
+}
+
+

@@ -1,0 +1,226 @@
+namespace  org.education
+
+
+enum IfSign {  //用户充值请求审核状态
+  o Y
+  o N
+  o R
+}
+
+
+abstract participant Business identified by email {
+  o String email
+  o Double accountBalance
+  o String password optional
+  o String Fingerprint optional
+  o String Iris optional
+}
+
+/**
+ * A CentralBank is a type of participant in the network
+ */
+participant CentralBank extends Business {
+  o Double totalIssueToken
+  o Double totalWithdrawToken
+}
+
+participant Regulator extends Business {
+}
+
+/**
+ * A Company is a type of participant in the network
+ */
+participant Company extends Business {
+  o String registrationNumber //注册机构号
+}
+
+
+
+/**
+ * A User is a type of participant in the network
+ */
+participant User extends Business {
+}
+
+
+transaction InitCentralBank {
+}
+
+
+transaction InitCompany {
+}
+
+transaction InitContract {
+}
+
+transaction InitService {
+}
+
+transaction InitUser {
+}
+
+
+
+asset CompanyTokenWithdraw identified by tokenWithdrawID {
+  o String tokenWithdrawID  //机构用户提现请求ID
+  o IfSign confirmBank
+  o Double tokenNum
+  o String paymentid optional
+  --> Company company
+}
+
+transaction CompanyWithdraw {
+  o Double tokenNum   //机构用户提现金额
+  o String tokenWithdrawID  //机构用户提现ID
+  --> Company company
+}
+
+transaction CheckCompanyWithdraw {
+  --> CompanyTokenWithdraw tokenWithdrawID //确认机构用户提现成功
+   o String paymentid
+  //--> CentralBank bank    硬编码bank
+}
+
+transaction RejectCompanyWithdraw {
+  o String[] logs optional   //确认机构用户提现失败
+  --> CompanyTokenWithdraw tokenWithdrawID 
+}
+
+
+asset UserTokenRecharge identified by tokenRechargeID {
+  o String tokenRechargeID  //用户充值请求ID
+  o IfSign confirmBank
+  o Double tokenNum
+  o String paymentid optional
+  --> User user
+}
+
+
+
+transaction UserRecharge {
+  o Double tokenNum   //用户充值金额
+  o String rechargeID  //用户充值ID
+  --> User user
+}
+
+transaction CheckUserRecharge {
+  --> UserTokenRecharge rechargeID //确认用户充值成功
+   o String paymentid
+  //--> CentralBank bank    硬编码bank
+}
+
+transaction RejectUserRecharge {
+  o String[] logs optional   //确认用户充值失败
+  --> UserTokenRecharge rechargeID 
+}
+
+/**
+ * A transaction type for token movements
+ */
+transaction TokenTransferU_U {  //用户课程币转账
+  o Double transferNum
+  o String transferID
+    --> User fromuser
+    --> User to
+}
+
+transaction TokenTransferU_C {  //用户课程币转账
+  o Double transferNum
+  o String transferID
+    --> User fromuser
+    --> Company to
+}
+
+
+asset Contract identified by contractID {
+  o String contractID  //权益分配ID
+  o Double platformPer   //分配给平台的百分比
+  o Double companyPer
+}
+
+asset Service identified by serviceID {
+  o String serviceID  //课程ID
+  o String serviceName  //课程名称
+  o Double readPrice  //阅读价格 
+  o Double ownershipPrice //所有权价格
+  --> Company company  //课程提供商
+}
+
+transaction UserConsumeService {
+  o String[] logs optional   //用户购买阅读权
+  --> Service serviceID 
+  // --> Contract contractID  硬编码
+  --> User user
+  // --> Company company
+  // --> CentralBank bank
+}
+
+transaction CompanyBuyOnwership {
+  o String[] logs optional   //用户购买所有权
+  --> Service serviceID 
+  // --> Contract contractID  硬编码
+  --> Company company 
+  // --> Company company
+  // --> CentralBank bank
+}
+
+transaction RegisterUser {  
+  o String email
+  o String password optional
+  o String Fingerprint optional
+  o String Iris optional
+}
+
+
+transaction RegisterCompany {  
+  o String email
+  o String registrationNumber //注册机构号
+  o String password optional
+  o String Fingerprint optional
+  o String Iris optional
+}
+
+
+transaction RegisterRegulator {  
+  o String email
+  o String password optional
+  o String Fingerprint optional
+  o String Iris optional
+}
+
+transaction UpdateUserpassword {  
+  o String email
+  o String password
+}
+
+transaction UpdateUserFingerprint {  
+  o String email
+  o String Fingerprint
+}
+
+transaction UpdateUserIris {  
+  o String email
+  o String Iris
+}
+
+transaction RegisterService {  
+  o String serviceID  //课程ID
+  o String serviceName  //课程名称
+  o Double readPrice  //阅读价格 
+  o Double ownershipPrice //所有权价格
+  --> Company company  //课程提供商
+}
+
+transaction UpdateServicereadPrice {  
+  o String serviceID
+  o Double readPrice
+}
+
+transaction UpdateServiceownershipPrice {  
+  o String serviceID
+  o Double ownershipPrice
+}
+
+
+
+
